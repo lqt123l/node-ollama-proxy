@@ -30,13 +30,11 @@ app.use((req, res, next) => {
 // ✅ 代理 /v1/ 请求，不修改路径
 app.use('/v1/', createProxyMiddleware({
     target: OLLAMA_URL,
-    changeOrigin: true,
-
+    changeOrigin: true, // 确保代理正确替换 Host 头
     onProxyReq: (proxyReq, req, res) => {
         console.log(`Proxying request: ${req.method} ${req.originalUrl} → ${OLLAMA_URL}${req.originalUrl}`);
     },
 }));
-
 // ✅ 确保监听 0.0.0.0
 const PORT = 8080;
 app.listen(PORT, '0.0.0.0', () => {
