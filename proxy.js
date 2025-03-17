@@ -33,9 +33,6 @@ app.use('/', createProxyMiddleware({
     changeOrigin: true,  // 🔥 让 Host 头匹配 Ollama
     logLevel: 'debug',    // 🔥 让日志更详细
 
-    // ✅ **明确转发路径**
-    pathRewrite: { '^/v1/': '/v1/' },
-
     // ✅ **确保路径正确**
     onProxyReq: (proxyReq, req, res) => {
         console.log(`🟢 Proxying request: ${req.method} ${req.originalUrl} → ${OLLAMA_URL}${req.url}`);
