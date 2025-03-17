@@ -51,5 +51,5 @@ app.use('/v1/', createProxyMiddleware({
 // ✅ **监听 0.0.0.0**
 const PORT = 8080;
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`✅ Server is running on http://0.0.0.0:${PORT}`);
+    console.log(`✅ Servers are running on http://0.0.0.0:${PORT}`);
 });
