@@ -27,14 +27,26 @@ app.use((req, res, next) => {
     next();
 });
 
-// ✅ 代理 /v1/ 请求，不修改路径
+// ✅ **确保 /v1/ 代理到 Ollama，并正确转发路径**
 app.use('/v1/', createProxyMiddleware({
     target: OLLAMA_URL,
-    changeOrigin: true, // 确保代理正确替换 Host 头
+    changeOrigin: true,
+
+    // 🔥 **确保不修改 /v1/ 路径，因为 Ollama 需要它**
+    pathRewrite: {},
+
+    // ✅ 代理日志，确认请求是否正确进入代理
     onProxyReq: (proxyReq, req, res) => {
-        console.log(`Proxying request: ${req.method} ${req.originalUrl} → ${OLLAMA_URL}${req.originalUrl}`);
+        console.log(`🟢 Proxying request: ${req.method} ${req.originalUrl} → ${OLLAMA_URL}${req.originalUrl}`);
     },
+
+    // ✅ 代理错误日志
+    onError: (err, req, res) => {
+        console.error('🔴 Proxy Error:', err);
+        res.status(500).json({ error: 'Proxy failed', details: err.message });
+    }
 }));
+
 // ✅ 确保监听 0.0.0.0
 const PORT = 8080;
 app.listen(PORT, '0.0.0.0', () => {
