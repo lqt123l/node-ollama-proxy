@@ -27,16 +27,16 @@ app.use((req, res, next) => {
     next();
 });
 
-// ✅ **代理 /v1/ 请求，确保正确转发**
+// ✅ **代理 `/v1/` 请求**
 app.use('/v1/', createProxyMiddleware({
     target: OLLAMA_URL,
-    changeOrigin: false,  // ❗ 让 Host 保持一致
+    changeOrigin: true,  // 🔥 让 Host 头匹配 Ollama
     logLevel: 'debug',    // 🔥 让日志更详细
 
-    // ✅ **确保路径不会被修改**
-    pathRewrite: {},
+    // ✅ **明确转发路径**
+    pathRewrite: { '^/v1/': '/v1/' },
 
-    // ✅ **打印代理路径**
+    // ✅ **确保路径正确**
     onProxyReq: (proxyReq, req, res) => {
         console.log(`🟢 Proxying request: ${req.method} ${req.originalUrl} → ${OLLAMA_URL}${req.url}`);
     },
@@ -51,5 +51,5 @@ app.use('/v1/', createProxyMiddleware({
 // ✅ **监听 0.0.0.0**
 const PORT = 8080;
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`✅ Servers are running on http://0.0.0.0:${PORT}`);
+    console.log(`✅ Server is running on http://0.0.0.0:${PORT}`);
 });
