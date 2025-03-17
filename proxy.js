@@ -28,7 +28,7 @@ app.use((req, res, next) => {
 });
 
 // ✅ **代理 `/v1/` 请求**
-app.use('/v1/', createProxyMiddleware({
+app.use('/', createProxyMiddleware({
     target: OLLAMA_URL,
     changeOrigin: true,  // 🔥 让 Host 头匹配 Ollama
     logLevel: 'debug',    // 🔥 让日志更详细
